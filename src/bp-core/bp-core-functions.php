@@ -5325,3 +5325,12 @@ function bp_core_xprofile_clear_all_user_progress_cache() {
 	);
 
 }
+
+/**
+ * Return the instance of messaging cloud.
+ *
+ * @return BP_Messaging_Cloud
+ */
+function bp_core_messaging_cloud() {
+	return BP_Messaging_Cloud::instance();
+}

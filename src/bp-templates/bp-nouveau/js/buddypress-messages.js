@@ -123,7 +123,7 @@ window.bp = window.bp || {};
 					// The compose view is specific (toggle behavior).
 					if ( 'compose' === view_id ) {
 						self.router.navigate( 'compose/', { trigger: true } );
-										$( event.target ).parents( '.bp-messages-container' ).removeClass( 'bp-view-message' ).addClass( 'bp-compose-message' );
+						$(event.target).parents('.bp-messages-container').removeClass('bp-view-message').addClass('bp-compose-message');
 						// Other views are classic.
 					} else {
 
@@ -356,14 +356,14 @@ window.bp = window.bp || {};
 					_.extend(
 						{
 							nonce: BP_Nouveau.messages.nonces.send
-							},
+						},
 						this.attributes
 					)
 				);
 
-					this.set( 'sending', false, { silent: true } );
+				this.set('sending', false, {silent: true});
 
-					return sent;
+				return sent;
 			}
 		}
 	);
@@ -395,7 +395,7 @@ window.bp = window.bp || {};
 					{
 						action : 'messages_thread_read',
 						nonce  : BP_Nouveau.nonces.messages
-						}
+					}
 				);
 
 				return bp.ajax.send( options );
@@ -415,7 +415,8 @@ window.bp = window.bp || {};
 				is_user_suspended   : false,
 				sender_avatar : '',
 				date          : 0,
-				display_date  : ''
+				display_date: '',
+				is_typing: false
 			}
 		}
 	);
@@ -441,7 +442,7 @@ window.bp = window.bp || {};
 						options.data,
 						{
 							action: 'messages_get_user_message_threads'
-							}
+						}
 					);
 
 					return bp.ajax.send( options );
@@ -496,8 +497,8 @@ window.bp = window.bp || {};
 						_.pick(
 							resp.extraContent,
 							[
-							'beforeLoop',
-							'afterLoop'
+								'beforeLoop',
+								'afterLoop'
 							]
 						)
 					);
@@ -517,7 +518,7 @@ window.bp = window.bp || {};
 						action: 'messages_' + action,
 						nonce : BP_Nouveau.nonces.messages,
 						id    : ids
-						}
+					}
 				);
 
 				return bp.ajax.send( options );
@@ -545,7 +546,7 @@ window.bp = window.bp || {};
 						{
 							action: 'messages_get_thread_messages',
 							before: this.before
-							}
+						}
 					);
 
 					return bp.ajax.send( options );
@@ -557,7 +558,7 @@ window.bp = window.bp || {};
 						{
 							action : 'messages_send_reply',
 							nonce  : BP_Nouveau.messages.nonces.send
-							},
+						},
 						model || {}
 					);
 
@@ -666,7 +667,7 @@ window.bp = window.bp || {};
 	// Git results collection returned from giphy api.
 	bp.Collections.GifDatas = Backbone.Collection.extend(
 		{
-				// Reference to this collection's model.
+			// Reference to this collection's model.
 			model: bp.Models.GifData
 		}
 	);
@@ -702,7 +703,7 @@ window.bp = window.bp || {};
 					{
 						type: this.options.type || 'info',
 						message: this.options.value
-						}
+					}
 				);
 			}
 		}
@@ -727,7 +728,7 @@ window.bp = window.bp || {};
 				this.model = new Backbone.Model(
 					{
 						extraContent: this.options.extraContent
-						}
+					}
 				);
 
 				this.el.className = 'bp-messages-hook';
@@ -745,7 +746,6 @@ window.bp = window.bp || {};
 			events: {
 				'input #message_content': 'focusEditorOnChange'
 			},
-
 			focusEditorOnChange: function ( e ) { // Fix issue of Editor loose focus when formatting is opened after selecting text
 				var medium_editor_toolbar = $( e.currentTarget ).closest( '#bp-message-content' ).find( '.medium-editor-toolbar' );
 				setTimeout(
@@ -759,6 +759,7 @@ window.bp = window.bp || {};
 
 			initialize: function() {
 				this.on( 'ready', this.activateTinyMce, this );
+
 			},
 
 			activateTinyMce: function() {
@@ -781,10 +782,10 @@ window.bp = window.bp || {};
 								forcePlainText: false,
 								cleanPastedHTML: true,
 								cleanReplacements: [
-								[new RegExp( /<div/gi ), '<p'],
-								[new RegExp( /<\/div/gi ), '</p'],
-								[new RegExp( /<h[1-6]/gi ), '<b'],
-								[new RegExp( /<\/h[1-6]/gi ), '</b'],
+									[new RegExp(/<div/gi), '<p'],
+									[new RegExp(/<\/div/gi), '</p'],
+									[new RegExp(/<h[1-6]/gi), '<b'],
+									[new RegExp(/<\/h[1-6]/gi), '</b'],
 								],
 								cleanAttrs: ['class', 'style', 'dir', 'id'],
 								cleanTags: [ 'meta', 'div', 'main', 'section', 'article', 'aside', 'button', 'svg', 'canvas', 'figure', 'input', 'textarea', 'select', 'label', 'form', 'table', 'thead', 'tfooter', 'colgroup', 'col', 'tr', 'td', 'th', 'dl', 'dd', 'center', 'caption', 'nav' ],
@@ -793,6 +794,10 @@ window.bp = window.bp || {};
 							imageDragging: false
 						}
 					);
+
+					bp.Nouveau.Messages.mediumEditor.subscribe('editableKeyup', function () {
+						window.bp_messaging_cloud_message.start_typing(false, false);
+					});
 
 					if ( !_.isUndefined( BP_Nouveau.media ) &&
 						!_.isUndefined( BP_Nouveau.media.emoji ) &&
@@ -1239,8 +1244,8 @@ window.bp = window.bp || {};
 
 				this.Timeout = setTimeout(
 					function() {
-							this.Timeout = null;
-							self.searchGif( e.target.value );
+						this.Timeout = null;
+						self.searchGif(e.target.value);
 					},
 					1000
 				);
@@ -1260,7 +1265,7 @@ window.bp = window.bp || {};
 						offset: self.offset,
 						fmt: 'json',
 						limit: this.limit
-						},
+					},
 					function( response ) {
 						self.gifDataItems.reset( response.data );
 						self.total_count = response.pagination.total_count;
@@ -1287,14 +1292,14 @@ window.bp = window.bp || {};
 				}
 			},
 
-				// Add a single GifDataItem to the list by creating a view for it, and
-				// appending its element to the `<ul>`.
+			// Add a single GifDataItem to the list by creating a view for it, and
+			// appending its element to the `<ul>`.
 			addOne: function( data ) {
 				var view = new bp.Views.MessagesGifDataItem( { model: data } );
 				this.$gifResultItem.append( view.render().el );
 			},
 
-				// Add all items in the **GifDataItem** collection at once.
+			// Add all items in the **GifDataItem** collection at once.
 			addAll: function() {
 				this.$gifResultItem.html( '' );
 				this.gifDataItems.each( this.addOne, this );
@@ -1313,7 +1318,7 @@ window.bp = window.bp || {};
 						offset: self.offset,
 						fmt: 'json',
 						limit: this.limit
-						},
+					},
 					function( response ) {
 						self.gifDataItems.reset( response.data );
 						self.total_count = response.pagination.total_count;
@@ -1335,7 +1340,7 @@ window.bp = window.bp || {};
 									offset: self.offset,
 									fmt: 'json',
 									limit: self.limit
-							};
+								};
 
 							self.el.classList.add( 'loading' );
 							var request = null;
@@ -1625,7 +1630,7 @@ window.bp = window.bp || {};
 			},
 
 			initialize: function() {
-				// Clone the model to set the resetted one.
+				// message-reply-new-submitClone the model to set the resetted one.
 				this.resetModel = this.model.clone();
 
 				// Add the editor view.
@@ -1643,11 +1648,11 @@ window.bp = window.bp || {};
 
 			closeComposeForm: function( event ) {
 				event.preventDefault();
-					var form = bp.Nouveau.Messages.views.get( 'compose' );
-					form.get( 'view' ).remove();
-					bp.Nouveau.Messages.views.remove( { id: 'compose', view: form } );
-					bp.Nouveau.Messages.router.navigate( '/' );
-					$( '.bp-messages-container' ).removeClass( 'bp-compose-message' );
+				var form = bp.Nouveau.Messages.views.get('compose');
+				form.get('view').remove();
+				bp.Nouveau.Messages.views.remove({id: 'compose', view: form});
+				bp.Nouveau.Messages.router.navigate('/');
+				$('.bp-messages-container').removeClass('bp-compose-message');
 			},
 
 			addMentions: function() {
@@ -1656,7 +1661,7 @@ window.bp = window.bp || {};
 					{
 						data: [],
 						suffix: ' '
-						}
+					}
 				);
 			},
 
@@ -1711,7 +1716,7 @@ window.bp = window.bp || {};
 								};
 							}
 						}
-						}
+					}
 				);
 
 				// Add element into the Arrdata array.
@@ -1747,7 +1752,7 @@ window.bp = window.bp || {};
 						if ( 'message_content' === input ) {
 							// tinyMce.
 							if ( typeof tinyMCE !== 'undefined' && undefined !== tinyMCE.activeEditor && null !== tinyMCE.activeEditor ) {
-									tinyMCE.activeEditor.setContent( '' );
+								tinyMCE.activeEditor.setContent('');
 							} else if ( undefined !== bp.Nouveau.Messages.mediumEditor && false !== bp.Nouveau.Messages.mediumEditor ) {
 								bp.Nouveau.Messages.mediumEditor.setContent( '' );
 							}
@@ -1785,7 +1790,7 @@ window.bp = window.bp || {};
 						// Group extra fields in meta.
 						if ( -1 === _.indexOf( ['send_to', 'message_content'], pair.name ) ) {
 							if ( _.isUndefined( meta[ pair.name ] ) ) {
-									meta[ pair.name ] = pair.value;
+								meta[pair.name] = pair.value;
 							} else {
 								if ( ! _.isArray( meta[ pair.name ] ) ) {
 									meta[ pair.name ] = [ meta[ pair.name ] ];
@@ -1911,7 +1916,7 @@ window.bp = window.bp || {};
 							self.model.set( 'document',document );
 						}
 
-							// clear message attachments and toolbar.
+						// clear message attachments and toolbar.
 						if (self.messagesAttachments !== false) {
 							self.messagesAttachments.onClose();
 						}
@@ -1929,9 +1934,9 @@ window.bp = window.bp || {};
 				).fail(
 					function( response ) {
 						if ( response.feedback ) {
-							   bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+							bp.Nouveau.Messages.displayFeedback(response.feedback, response.type);
 						}
-							$( '#bp-messages-send' ).prop( 'disabled',false ).removeClass( 'loading' );
+						$('#bp-messages-send').prop('disabled', false).removeClass('loading');
 					}
 				);
 			},
@@ -1991,7 +1996,7 @@ window.bp = window.bp || {};
 						data    : _.pick( this.options, 'box' ),
 						success : _.bind( this.threadsFetched, this ),
 						error   : _.bind( this.threadsFetchError, this )
-						}
+					}
 				);
 			},
 
@@ -2021,7 +2026,7 @@ window.bp = window.bp || {};
 						{
 							value: response.feedback,
 							type: response.type
-							}
+						}
 					);
 					this.views.add( this.loadingFeedback );
 				}
@@ -2053,7 +2058,7 @@ window.bp = window.bp || {};
 							data    : _.pick( this.collection.options, ['box', 'search_terms', 'page'] ),
 							success : _.bind( this.threadsFetched, this ),
 							error   : _.bind( this.threadsFetchError, this )
-							}
+						}
 					);
 				}
 			},
@@ -2108,12 +2113,12 @@ window.bp = window.bp || {};
 				if ( selected.get( 'unread' ) ) {
 					selected.updateReadState().done(
 						function() {
-								selected.set( 'unread', false );
+							selected.set('unread', false);
 
-								bp.Nouveau.Messages.router.navigate(
-									'view/' + target.data( 'thread-id' ) + '/',
-									{ trigger: true }
-								);
+							bp.Nouveau.Messages.router.navigate(
+								'view/' + target.data('thread-id') + '/',
+								{trigger: true}
+							);
 						}
 					);
 				} else {
@@ -2152,8 +2157,8 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.threads.doAction( action, id, options ).done(
 					function() {
 
-							// Remove previous feedback.
-							bp.Nouveau.Messages.removeFeedback();
+						// Remove previous feedback.
+						bp.Nouveau.Messages.removeFeedback();
 
 						if ( 'hide_thread' === action ) {
 							bp.Nouveau.Messages.threads.remove( bp.Nouveau.Messages.threads.get( id ) );
@@ -2163,10 +2168,10 @@ window.bp = window.bp || {};
 					}
 				).fail(
 					function( response ) {
-							// Remove previous feedback.
-							bp.Nouveau.Messages.removeFeedback();
+						// Remove previous feedback.
+						bp.Nouveau.Messages.removeFeedback();
 
-							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+						bp.Nouveau.Messages.displayFeedback(response.feedback, response.type);
 					}
 				);
 			},
@@ -2217,7 +2222,7 @@ window.bp = window.bp || {};
 					{
 						recipientsCount: recipientsCount,
 						toOthers: toOthers
-						},
+					},
 					{ silent: true }
 				);
 
@@ -2329,7 +2334,7 @@ window.bp = window.bp || {};
 						data    : _.pick( this.model.attributes, ['box', 'search_terms', 'page'] ),
 						success : this.threadsFiltered,
 						error   : this.threadsFilterError
-						}
+					}
 				);
 			},
 
@@ -2358,7 +2363,7 @@ window.bp = window.bp || {};
 					{
 						'search_terms': $( event.target ).find( 'input[type=search]' ).val() || '',
 						page: 1
-						}
+					}
 				);
 			},
 
@@ -2407,7 +2412,7 @@ window.bp = window.bp || {};
 						data: data,
 						success: _.bind( this.options.userMessage.messagesFetched, this.options.userMessage ),
 						error: _.bind( this.options.userMessage.messagesFetchError, this.options.userMessage )
-						}
+					}
 				);
 
 			}
@@ -2445,14 +2450,14 @@ window.bp = window.bp || {};
 			},
 
 			navigateToList: function( event ) {
-					event.preventDefault();
-					bp.Nouveau.Messages.router.navigate( '/' );
-					$( '.bp-messages-container' ).removeClass( 'bp-view-message bp-compose-message' );
+				event.preventDefault();
+				bp.Nouveau.Messages.router.navigate('/');
+				$('.bp-messages-container').removeClass('bp-view-message bp-compose-message');
 			},
 
 			doAction: function( event ) {
 				var action = $( event.currentTarget ).data( 'bp-action' ), self = this, options = {},
-				feedback   = BP_Nouveau.messages.doingAction;
+					feedback = BP_Nouveau.messages.doingAction;
 
 				$( event.currentTarget ).closest( '.message_action__list' ).removeClass( 'open' );
 
@@ -2508,10 +2513,10 @@ window.bp = window.bp || {};
 				bp.Nouveau.Messages.threads.doAction( action, this.model.get( 'id' ), options ).done(
 					function( response ) {
 
-							// Remove previous feedback.
-							bp.Nouveau.Messages.removeFeedback();
+						// Remove previous feedback.
+						bp.Nouveau.Messages.removeFeedback();
 
-							// Remove all views.
+						// Remove all views.
 						if ( 'delete_thread' === action || 'hide_thread' === action ) {
 							if ( bp.Nouveau.Messages.threads.length > 1 ) {
 								// bp.Nouveau.Messages.clearViews();
@@ -2563,10 +2568,10 @@ window.bp = window.bp || {};
 					}
 				).fail(
 					function( response ) {
-							// Remove previous feedback.
-							bp.Nouveau.Messages.removeFeedback();
+						// Remove previous feedback.
+						bp.Nouveau.Messages.removeFeedback();
 
-							bp.Nouveau.Messages.displayFeedback( response.feedback, response.type );
+						bp.Nouveau.Messages.displayFeedback(response.feedback, response.type);
 					}
 				);
 			},
@@ -2621,6 +2626,7 @@ window.bp = window.bp || {};
 				this.views.add( new bp.Views.MessageReplyFormSubmit( { model: this.model } ) );
 			}
 		}
+
 	);
 
 	bp.Views.userMessages = bp.Nouveau.Messages.View.extend(
@@ -2656,15 +2662,71 @@ window.bp = window.bp || {};
 							collection: this.collection,
 							thread: this.options.thread,
 							userMessage: this
-							}
+						}
 					)
 				);
+
+				// this.typing(false);
+				// console.log('typing disabled');
+
+
+				// chat event.
+				var that = this;
+
+				var model = this.model;
+				window.bp_messaging_cloud.on_connect(function () {
+					console.log('Messages Integrated with cloud.');
+					window.bp_messaging_cloud.listen('typing', function (data) {
+						if (data.from != window.bp_messaging_cloud_data.user_id) {
+							that.typing(true);
+							setTimeout(function () {
+								that.typing(false);
+							}, 2000);
+						}
+					});
+					window.bp_messaging_cloud.listen('new message', function (data) {
+						console.log("new message", data);
+						// var demo = that.collection.parse({
+						// 	messages: [data.message]
+						// });
+						var demo = that.collection.parse({
+							messages: [{
+								'content': data.message.content,
+								'date': data.message.date,
+								'display_date': data.message.display_date,
+								'id': data.message.id,
+								'is_deleted': data.message.is_deleted,
+								'is_new': data.message.is_new,
+								'is_starred': data.message.is_starred,
+								'sender_avatar': data.message.sender_avatar,
+								'sender_id': data.message.sender_id,
+								'sender_is_you': data.message.sender_is_you,
+								'sender_link': data.message.sender_link,
+								'sender_name': data.message.sender_name,
+								'star_link': data.message.star_link
+							}]
+						});
+						var first = _.first(demo);
+						// first.id = new Date().getTime();
+						that.collection.add(first);
+						// scroll to bottom.
+						$('#bp-message-thread-list').animate({scrollTop: $('#bp-message-thread-list').prop('scrollHeight')}, 0);
+
+
+					});
+				});
 			},
 
 			events: {
 				'click #send_reply_button' : 'sendReply'
 			},
-
+			typing: function (is_typing) {
+				if (is_typing) {
+					jQuery("#bp-user-typing").fadeIn();
+				} else {
+					jQuery("#bp-user-typing").fadeOut();
+				}
+			},
 			requestMessages: function() {
 				var data 					   = {};
 				this.options.collection.before = null;
@@ -2687,7 +2749,7 @@ window.bp = window.bp || {};
 						data: data,
 						success : _.bind( this.messagesFetched, this ),
 						error: _.bind( this.messagesFetchError, this )
-						}
+					}
 				);
 			},
 
@@ -2786,7 +2848,7 @@ window.bp = window.bp || {};
 						{
 							value: response.feedback,
 							type: response.type
-							}
+						}
 					);
 					this.views.add( '#bp-message-content',this.loadingFeedback );
 				}
@@ -2880,18 +2942,23 @@ window.bp = window.bp || {};
 
 				$( '#send_reply_button' ).prop( 'disabled',true ).addClass( 'loading' );
 
+
 				this.collection.sync(
 					'create',
 					this.model.attributes,
 					{
 						success : _.bind( this.replySent, this ),
 						error   : _.bind( this.replyError, this )
-						}
+					}
 				);
 			},
 
 			replySent: function( response ) {
 				var reply = this.collection.parse( response );
+
+				var first_reply = _.first(reply);
+
+				window.bp_messaging_cloud_message.send_message(first_reply.content, first_reply.sender_id, 0, reply.thread_id, first_reply);
 
 				// Reset the form.
 				if ( typeof tinyMCE !== 'undefined' ) {
@@ -2933,7 +3000,6 @@ window.bp = window.bp || {};
 
 				$( '#bp-message-thread-list' ).animate( { scrollTop: $( '#bp-message-thread-list' ).prop( 'scrollHeight' )}, 0 );
 			},
-
 			replyError: function( response ) {
 				this.model.set( 'sending', false );
 				if ( response.feedback && response.type ) {
@@ -3014,7 +3080,7 @@ window.bp = window.bp || {};
 						if ( _this.data( 'thread-id' ) == thread_id ) {
 							_this.closest( '.thread-item' ).addClass( 'current' );
 							if ( _this.closest( '.thread-item' ).hasClass( 'unread' ) ) {
-									_this.closest( '.thread-item' ).removeClass( 'unread' );
+								_this.closest('.thread-item').removeClass('unread');
 							}
 						} else {
 							_this.closest( '.thread-item' ).removeClass( 'current' );

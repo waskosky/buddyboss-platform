@@ -13,6 +13,10 @@
 
 	<?php bp_nouveau_messages_hook( 'before', 'thread_reply' ); ?>
 
+
+	<div id="bp-user-typing"
+	     style=" display:none; font-size: 14px; color: gray; "><?php _e( "User is typing...", "buddyboss" ); ?></div>
+
 	<form id="send-reply" class="standard-form send-reply">
 		<div class="message-box">
 			<div class="message-metadata">

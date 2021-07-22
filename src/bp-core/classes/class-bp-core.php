@@ -1,4 +1,4 @@
-<?php
+bbapp-session-id<?php
 /**
  * BuddyBoss Core Loader.
  *

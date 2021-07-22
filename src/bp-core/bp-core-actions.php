@@ -171,3 +171,9 @@ function bp_restrict_single_attachment() {
 		}
 	}
 }
+
+/**
+ * BuddyBoss Cloud.
+ */
+
+add_action( 'bp_loaded', 'bp_core_messaging_cloud' );
