@@ -63,7 +63,7 @@ jQuery( document ).ready( function() {
 
 					getExistingFieldsSelector.val('');
 					getExistingFieldsSelector.val( response.data.field_ids );
-					appendHtmlDiv.append( response.data.field_html );
+					setTimeout(function(){appendHtmlDiv.append( response.data.field_html ); },0);
 
 					var divList = jQuery( 'body .layout-wrap #profile-details-section > .editfield' );
 					divList.sort(function(a, b){
@@ -162,7 +162,7 @@ jQuery( document ).ready( function() {
 
 					getExistingFieldsSelector.val('');
 					getExistingFieldsSelector.val( response.data.field_ids );
-					appendHtmlDiv.append( response.data.field_html );
+          setTimeout(function(){appendHtmlDiv.append( response.data.field_html ); },0);
 
 					var divList = jQuery( 'body .layout-wrap #profile-details-section > .editfield' );
 					divList.sort(function(a, b){

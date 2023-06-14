@@ -200,7 +200,7 @@ function bp_core_register_common_scripts() {
 	// Add the "register.js" file if it's a register page and Profile Type field.
 	if ( bp_is_register_page() && bp_get_xprofile_member_type_field_id() > 0 ) {
 		$scripts['bp-register-page'] = array(
-			'file'         => "{$url}register{$min}.js",
+			'file'         => "{$url}register.js",
 			'dependencies' => array( 'jquery' ),
 			'footer'       => false,
 		);

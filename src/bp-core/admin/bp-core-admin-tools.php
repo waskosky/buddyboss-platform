@@ -1143,7 +1143,7 @@ function bp_admin_assign_member_type() {
 
 			$member_type = bp_get_member_type( $user->ID );
 
-			if ( false === $member_type ) {
+			if ( false === $member_type || $member_type === 'student') {
 
 				// Get the user object.
 				$user1 = get_userdata( $user->ID );

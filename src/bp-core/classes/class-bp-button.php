@@ -374,6 +374,9 @@ class BP_Button {
 
 		// Should we use a parent element?
 		if ( ! empty( $r['parent_element'] ) ) {
+      if ( ! is_array($r['parent_attr']))
+        $r['parent_attr'] = array();		
+		
 			if ( ! isset( $r['parent_attr']['class'] ) ) {
 				$r['parent_attr']['class'] = '';
 			}

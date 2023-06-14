@@ -879,8 +879,9 @@ class BP_Activity_Activity {
 				$activity->mptt_right        = (int) $activity->mptt_right;
 				$activity->is_spam           = (int) $activity->is_spam;
 			}
-
-			$activities[] = $activity;
+      
+      if($activity)
+        $activities[] = $activity;
 		}
 
 		$user_ids  = wp_list_pluck( $activities, 'user_id' );

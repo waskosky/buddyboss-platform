@@ -136,7 +136,8 @@ function bp_nouveau_ajax_xprofile_get_field() {
 	$content                = ob_get_clean();
 	$response               = array();
 	$response['field_ids']  = $existing_fields;
-	$response['field_html'] = $content;
+	$response['field_html'] = apply_filters( 'bp_templates_user_fields_form_ajax_html_content', $content);
+	
 
 
 	wp_send_json_success( $response );
