@@ -407,6 +407,8 @@ class BP_Akismet {
 
 		// Store a copy of the data that was submitted to Akismet.
 		$this->last_activity->akismet_submission = $activity_data;
+		
+		do_action_ref_array( 'bp_activity_akismet_spam_whitelist_overrides', array( &$activity, &$activity_data ) );
 
 		// Spam.
 		if ( 'true' == $activity_data['bp_as_result'] ) {
