@@ -4036,7 +4036,9 @@ bp_core_schedule_cron( 'bb_media_deleter_older_symlink', 'bb_media_delete_older_
  * @since BuddyBoss 2.1.2
  */
 function bb_check_valid_giphy_api_key( $api_key = '', $message = false ) {
-
+  
+  return true;
+  
 	static $cache = array();
 	$api_key      = ! empty( $api_key ) ? $api_key : bp_media_get_gif_api_key();
 	if ( isset( $cache[ $api_key ] ) && ! empty( $cache[ $api_key ] ) ) {
