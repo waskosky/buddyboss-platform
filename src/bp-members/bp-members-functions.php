@@ -5088,7 +5088,7 @@ function bb_members_notifications_mark_read() {
 	}
 
 	// Mark individual notification as read for member following.
-	if ( ! empty( $_GET['rid'] ) ) {
+	if ( ! empty( $_GET['rid'] ) && class_exists('BP_Notifications_Notification') ) {
 		BP_Notifications_Notification::update(
 			array(
 				'is_new' => false,
@@ -5113,7 +5113,7 @@ function bb_members_notifications_mark_read() {
 		}
 
 		// Mark individual notification as read.
-		if ( ! empty( $n_id ) ) {
+		if ( ! empty( $n_id ) && class_exists('BP_Notifications_Notification')) {
 			BP_Notifications_Notification::update(
 				array(
 					'is_new' => false,
