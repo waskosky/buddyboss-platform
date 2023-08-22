@@ -683,6 +683,11 @@ class BP_Akismet {
 			$history = array();
 		}
 
+		if(isset($history['time']))
+		{
+      $history = array($history);
+		}
+
 		// Sort it by the time recorded.
 		usort( $history, 'akismet_cmp_time' );
 
