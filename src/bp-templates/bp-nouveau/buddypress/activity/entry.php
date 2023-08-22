@@ -18,7 +18,7 @@ $link_url            = '';
 
 $link_preview_data = bp_activity_get_meta( bp_get_activity_id(), '_link_preview_data', true );
 if ( ! empty( $link_preview_data ) && count( $link_preview_data ) ) {
-	$link_preview_string = wp_json_encode( $link_preview_data );
+	$link_preview_string = htmlspecialchars(wp_json_encode( $link_preview_data ), ENT_QUOTES, 'UTF-8');
 	$link_url            = ! empty( $link_preview_data['url'] ) ? $link_preview_data['url'] : '';
 }
 
