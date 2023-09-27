@@ -4119,7 +4119,8 @@ function bp_email_unsubscribe_handler() {
 	);
 
 	bp_core_add_message( $message , $message_type );
-	bp_core_redirect( bp_core_get_user_domain( $raw_user_id ) );
+	//bp_core_redirect( bp_core_get_user_domain( $raw_user_id ) );
+	bp_core_redirect( apply_filters( 'bp_email_unsubscribe_handler_redirect', bp_core_get_user_domain( $raw_user_id ) ) );
 
 	exit;
 }
