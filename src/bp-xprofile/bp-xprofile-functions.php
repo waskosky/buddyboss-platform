@@ -1458,7 +1458,7 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 
 	$field_ids = array();
 	foreach ( (array) $user_visibility_levels as $field_id => $field_visibility ) {
-		if(($field_id == 3 || $field_id == 522) && $field_visibility == 'adminsonly')
+    if(($field_id == 3 || $field_id == 522) && $field_visibility == 'adminsonly' && !strstr($_SERVER['REQUEST_URI'],'/profile/edit/') && !strstr($_SERVER['REQUEST_URI'],'/v1/xprofile/'))
     {
       $field_ids[] = $field_id;
     }
