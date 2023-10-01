@@ -1,8 +1,4 @@
-<p align="center">
-<a href="https://www.buddyboss.com/"><img src="https://github.com/buddyboss/buddyboss-platform/raw/master/.github/buddyboss-logo.jpg" alt="BuddyBoss" width="288" height="93" /></a>
-</p>
-
-Welcome to the BuddyBoss Platform repository on GitHub. Here you can browse the source files of the project. 
+This is the fork of BuddyBoss Platform used by AscensionWorks.TV. Most custom code should be moved to other plugins through additional filters over time so that this fork is no longer needed.
 
 ## Documentation
 
