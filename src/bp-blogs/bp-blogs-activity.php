@@ -919,7 +919,9 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	// @todo since this is done after AJAX posting, the activity comment permalink
 	// doesn't change on the front end until the next page refresh.
 	$resave_activity               = new BP_Activity_Activity( $comment_id );
-	$resave_activity->primary_link = '';
+	//$resave_activity->primary_link = '';
+  $resave_activity->primary_link = get_comment_link( $post_comment_id );
+
 
 	/**
 	 * Now that the activity id exists and the post comment was created, we don't need to update
@@ -927,7 +929,7 @@ function bp_blogs_sync_add_from_activity_comment( $comment_id, $params, $parent_
 	 */
 	remove_action( 'bp_activity_before_save', 'bp_blogs_sync_activity_edit_to_post_comment', 20 );
 
-	$resave_activity->content = '';
+	//$resave_activity->content = '';
 	$resave_activity->save();
 
 	// Add the edit activity comment hook back.

@@ -2970,7 +2970,16 @@ function bp_activity_new_comment( $args = '' ) {
 	 * @param string $r       Content for the newly posted comment.
 	 * @param string $context This filter's context ("new").
 	 */
+	 
+	$origContent = $r['content'];
 	$comment_content = apply_filters( 'bp_activity_comment_content', $r['content'], 'new' );
+	$filteredContent = $comment_content;
+	
+	//MW FIX: FILTERING SHOULD NOT DELETE CONTENT?!
+	if(trim($origContent) && !trim($filteredContent))
+	{
+		$comment_content = $origContent;
+	}
 
 	$bb_activity_comment_edit = false;
 	if ( ! empty( $r['id'] ) ) {
