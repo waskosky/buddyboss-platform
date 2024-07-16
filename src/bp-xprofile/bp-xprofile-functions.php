@@ -1511,7 +1511,15 @@ function bp_xprofile_get_fields_by_visibility_levels( $user_id, $levels = array(
 		if ( ! empty( $user_visibility_levels ) ) {
 			foreach ( (array) $user_visibility_levels as $field_id => $field_visibility ) {
 				if ( in_array( $field_visibility, $levels, true ) ) {
-					$field_ids[] = $field_id;
+				
+					//original commit/0c9fb8dc7e20f5c8d514d53862ccf5dbce805e42 && commit/65c54bbc6746102d1abf4c33e894908cb84550c6 "Fixing my janky solution of last name forced hiding".. "To allow people who previously set 'only me' to edit their own last name field again"
+					if(($field_id == 3 || $field_id == 522) && $field_visibility == 'adminsonly' && !strstr($_SERVER['REQUEST_URI'],'/profile/edit/') && !strstr($_SERVER['REQUEST_URI'],'/v1/xprofile/'))
+					{
+						$field_ids[] = $field_id;
+					}
+					else 
+						$field_ids[] = $field_id;
+						
 				}
 			}
 		}
