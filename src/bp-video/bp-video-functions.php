@@ -4138,7 +4138,9 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
  * @since BuddyBoss 1.7.0
  */
 function bb_video_check_is_ffmpeg_binary() {
-
+	
+	return false;
+	
 	$retval = array(
 		'ffmpeg' => null,
 		'error'  => null,
