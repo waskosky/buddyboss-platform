@@ -4150,12 +4150,15 @@ function bb_video_get_attachments_symlinks( $video_attachment_id, $video_id = 0 
  */
 function bb_video_check_is_ffmpeg_binary() {
 	
-	return false;
-	
+
 	$retval = array(
 		'ffmpeg' => null,
 		'error'  => null,
 	);
+
+	//NOT SURE WHY THIS IS NEEDED
+	include_once $_SERVER['DOCUMENT_ROOT']. '/wp-content/plugins/buddyboss-platform/includes/Library/composer.php';
+	include_once $_SERVER['DOCUMENT_ROOT']. '/wp-content/plugins/buddyboss-platform/includes/Library/Composer/Src/FFMpeg.php';	
 
 	if ( class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) || class_exists( 'FFMpeg\FFMpeg' ) ) {
 		try {
@@ -4191,11 +4194,16 @@ function bb_video_check_is_ffmpeg_binary() {
  */
 function bb_video_check_is_ffprobe_binary() {
 
+
 	$retval = array(
 		'ffprob' => null,
 		'error'  => null,
 	);
 
+	//NOT SURE WHY THIS IS NEEDED
+	include_once $_SERVER['DOCUMENT_ROOT']. '/wp-content/plugins/buddyboss-platform/includes/Library/composer.php';
+	include_once $_SERVER['DOCUMENT_ROOT']. '/wp-content/plugins/buddyboss-platform/includes/Library/Composer/Src/FFMpeg.php';		
+	
 	if (
 		(
 			class_exists( 'BuddyBossPlatform\FFMpeg\FFMpeg' ) ||
