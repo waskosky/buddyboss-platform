@@ -938,8 +938,9 @@ class BP_Activity_Activity {
 					$activity->action = bp_activity_generate_action_string( $activity );
 				}
 			}
-
-			$activities[] = $activity;
+		
+		    if($activity)
+			   $activities[] = $activity;
 		}
 
 		$user_ids  = wp_list_pluck( $activities, 'user_id' );
