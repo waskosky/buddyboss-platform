@@ -506,7 +506,26 @@ function bp_nouveau_prepare_group_for_js( $item ) {
 		}
 	}
 
-	return $args;
+	if ( function_exists( 'bb_is_enabled_group_activity_topics' ) && bb_is_enabled_group_activity_topics() ) {
+		$topics = function_exists( 'bb_get_group_activity_topics' ) ? bb_get_group_activity_topics(
+			array(
+				'item_id'  => $item->id,
+				'can_post' => true,
+			)
+		) : array();
+
+		$args['topics']['topic_lists'] = ! empty( $topics ) ? $topics : array();
+	}
+
+	/**
+	 * Filters the group data for use with javascript.
+	 *
+	 * @since BuddyBoss 2.13.0
+	 *
+	 * @param array   $args Array of group data.
+	 * @param object  $item The group object.
+	 */
+	return apply_filters( 'bp_nouveau_prepare_group_for_js', $args, $item );
 }
 
 /**

@@ -421,6 +421,7 @@ function bp_media_get_specific( $args = '' ) {
 			'album_id'         => false,      // Album ID.
 			'user_id'          => false,      // User ID.
 			'moderation_query' => true,
+			'count_total'      => false,
 			'status'           => bb_media_get_published_status(),
 		),
 		'media_get_specific'
@@ -438,6 +439,7 @@ function bp_media_get_specific( $args = '' ) {
 		'user_id'          => $r['user_id'],
 		'moderation_query' => $r['moderation_query'],
 		'status'           => $r['status'],
+		'count_total'      => $r['count_total'],
 	);
 
 	/**
@@ -524,6 +526,12 @@ function bp_media_add( $args = '' ) {
 		$media->privacy = $r['privacy'];
 	} elseif ( ! empty( $media->group_id ) ) {
 		$media->privacy = 'grouponly';
+		if ( ! empty( $media->activity_id ) ) {
+			$activity = new BP_Activity_Activity( $media->activity_id );
+			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
+				$media->privacy = $r['privacy'];
+			}
+		}
 	} elseif ( ! empty( $media->album_id ) ) {
 		$album = new BP_Media_Album( $media->album_id );
 		if ( ! empty( $album ) ) {
@@ -1601,7 +1609,7 @@ function bp_media_import_buddyboss_media_tables() {
 
 				$attachment_id = ! empty( $media->media_id ) ? $media->media_id : false;
 				$user_id       = ! empty( $media->media_author ) ? $media->media_author : false;
-				$title         = ! empty( $media->media_title ) ? $media->media_title : '';
+				$title         = ! empty( $media->media_title ) ? sanitize_text_field( wp_unslash( $media->media_title ) ) : '';
 				$activity_id   = ! empty( $media->activity_id ) ? $media->activity_id : false;
 
 				if ( ! empty( $activity_id ) ) {
@@ -1651,12 +1659,13 @@ function bp_media_import_buddyboss_media_tables() {
 				if ( bp_is_active( 'activity' ) ) {
 
 					$activity_args = array(
-						'user_id'       => $user_id,
-						'recorded_time' => $date_created,
-						'hide_sitewide' => true,
-						'privacy'       => 'media',
-						'type'          => 'activity_update',
-						'component'     => buddypress()->activity->id,
+						'user_id'        => $user_id,
+						'recorded_time'  => $date_created,
+						'hide_sitewide'  => true,
+						'privacy'        => 'media',
+						'type'           => 'activity_update',
+						'component'      => buddypress()->activity->id,
+						'title_required' => false,
 					);
 
 					if ( ! empty( $activity_id ) ) {
@@ -1773,7 +1782,7 @@ function bp_media_import_buddyboss_forum_media() {
 						$media_id = bp_media_add(
 							array(
 								'attachment_id' => $attachment_id,
-								'title'         => $title,
+								'title'         => sanitize_text_field( wp_unslash( $title ) ),
 								'album_id'      => false,
 								'group_id'      => false,
 								'error_type'    => 'bool',
@@ -1859,7 +1868,7 @@ function bp_media_import_buddyboss_topic_media() {
 						$media_id = bp_media_add(
 							array(
 								'attachment_id' => $attachment_id,
-								'title'         => $title,
+								'title'         => sanitize_text_field( wp_unslash( $title ) ),
 								'album_id'      => false,
 								'group_id'      => false,
 								'error_type'    => 'bool',
@@ -1945,7 +1954,7 @@ function bp_media_import_buddyboss_reply_media() {
 						$media_id = bp_media_add(
 							array(
 								'attachment_id' => $attachment_id,
-								'title'         => $title,
+								'title'         => sanitize_text_field( wp_unslash( $title ) ),
 								'album_id'      => false,
 								'group_id'      => false,
 								'error_type'    => 'bool',
@@ -2811,7 +2820,7 @@ function bp_media_album_recursive_li_list( $array, $first = false ) {
 	}
 
 	foreach ( $array as $item ) {
-		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . stripslashes( $item['title'] ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
+		$output .= '<li data-id="' . esc_attr( $item['id'] ) . '" data-privacy="' . esc_attr( $item['privacy'] ) . '"><span id="' . esc_attr( $item['id'] ) . '" data-id="' . esc_attr( $item['id'] ) . '">' . esc_html( stripslashes( $item['title'] ) ) . '</span>' . bp_media_album_recursive_li_list( $item['children'], true ) . '</li>';
 	}
 	$output .= '</ul>';
 
@@ -2909,6 +2918,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
+					$activity->title_required    = false;
 					$activity->save();
 				}
 
@@ -2968,7 +2978,8 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 						bp_activity_delete( array( 'id' => $need_delete ) );
 
 						// Update parent activity privacy to destination privacy.
-						$parent_activity->privacy = $destination_privacy;
+						$parent_activity->privacy        = $destination_privacy;
+						$parent_activity->title_required = false;
 						$parent_activity->save();
 
 					} elseif ( count( $parent_activity_media_ids ) > 1 ) {
@@ -2984,6 +2995,7 @@ function bp_media_move_media_to_album( $media_id = 0, $album_id = 0, $group_id =
 							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
+							$activity->title_required    = false;
 							$activity->save();
 
 							bp_activity_update_meta( (int) $child_activity_id, 'bp_media_ids', $media_id );

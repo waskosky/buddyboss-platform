@@ -433,6 +433,7 @@ function bp_document_get_specific( $args = '' ) {
 			'meta_query'       => false,
 			'privacy'          => false,      // privacy to filter.
 			'moderation_query' => true,
+			'count_total'      => false,
 			'status'           => bb_document_get_published_status(), // Filter by document status. published, scheduled.
 		),
 		'document_get_specific'
@@ -451,6 +452,7 @@ function bp_document_get_specific( $args = '' ) {
 		'meta_query'       => $r['meta_query'],
 		'moderation_query' => $r['moderation_query'],
 		'status'           => $r['status'],
+		'count_total'      => $r['count_total'],
 	);
 
 	/**
@@ -540,6 +542,12 @@ function bp_document_add( $args = '' ) {
 		$document->privacy = $r['privacy'];
 	} elseif ( ! empty( $document->group_id ) ) {
 		$document->privacy = 'grouponly';
+		if ( ! empty( $document->activity_id ) ) {
+			$activity = new BP_Activity_Activity( $document->activity_id );
+			if ( ! empty( $activity ) && 'activity_comment' === $activity->type ) {
+				$document->privacy = $r['privacy'];
+			}
+		}
 	} elseif ( ! empty( $document->folder_id ) ) {
 		$folder = new BP_Document_Folder( $document->folder_id );
 		if ( ! empty( $folder ) ) {
@@ -2362,6 +2370,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 					$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 					$activity->secondary_item_id = 0;
 					$activity->privacy           = $destination_privacy;
+					$activity->title_required    = false;
 					$activity->save();
 				}
 
@@ -2418,7 +2427,8 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 						bp_activity_delete( array( 'id' => $need_delete ) );
 
 						// Update parent activity privacy to destination privacy.
-						$parent_activity->privacy = $destination_privacy;
+						$parent_activity->privacy        = $destination_privacy;
+						$parent_activity->title_required = false;
 						$parent_activity->save();
 
 					} elseif ( count( $parent_activity_document_ids ) > 1 ) {
@@ -2434,6 +2444,7 @@ function bp_document_move_document_to_folder( $document_id = 0, $folder_id = 0, 
 							$activity->hide_sitewide     = ( 'groups' === $activity->component && ( 'hidden' === $status || 'private' === $status ) ) ? 1 : 0;
 							$activity->secondary_item_id = 0;
 							$activity->privacy           = $destination_privacy;
+							$activity->title_required    = false;
 							$activity->save();
 
 							bp_activity_update_meta( (int) $child_activity_id, 'bp_document_ids', $document_id );
@@ -2919,7 +2930,8 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 				if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 					$activity = new BP_Activity_Activity( (int) $activity_id );
 					if ( bp_activity_user_can_delete( $activity ) ) {
-						$activity->privacy = $destination_privacy;
+						$activity->privacy        = $destination_privacy;
+						$activity->title_required = false;
 						$activity->save();
 					}
 				}
@@ -2954,7 +2966,8 @@ function bp_document_move_folder_to_folder( $folder_id, $destination_folder_id, 
 					if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 						$activity = new BP_Activity_Activity( (int) $activity_id );
 						if ( bp_activity_user_can_delete( $activity ) ) {
-							$activity->privacy = $destination_privacy;
+							$activity->privacy        = $destination_privacy;
+							$activity->title_required = false;
 							$activity->save();
 						}
 					}
@@ -3027,7 +3040,8 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 							if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 								$activity = new BP_Activity_Activity( (int) $activity_id );
 								if ( bp_activity_user_can_delete( $activity ) ) {
-									$activity->privacy = $privacy;
+									$activity->privacy        = $privacy;
+									$activity->title_required = false;
 									$activity->save();
 								}
 							}
@@ -3052,7 +3066,8 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 					if ( ! empty( $activity_id ) && bp_is_active( 'activity' ) ) {
 						$activity = new BP_Activity_Activity( (int) $activity_id );
 						if ( bp_activity_user_can_delete( $activity ) ) {
-							$activity->privacy = $privacy;
+							$activity->privacy        = $privacy;
+							$activity->title_required = false;
 							$activity->save();
 						}
 					}
@@ -3080,7 +3095,8 @@ function bp_document_update_privacy( $document_id = 0, $privacy = '', $type = 'f
 			if ( bp_is_active( 'activity' ) && ! empty( $activity_id ) ) {
 				$activity = new BP_Activity_Activity( (int) $activity_id );
 				if ( bp_activity_user_can_delete( $activity ) ) {
-					$activity->privacy = $privacy;
+					$activity->privacy        = $privacy;
+					$activity->title_required = false;
 					$activity->save();
 				}
 			}
@@ -3824,7 +3840,11 @@ function bp_document_delete_document_previews() {
 	if ( ! is_dir( $inner_directory_name ) ) {
 		return;
 	}
-	$dir          = opendir( $inner_directory_name );
+
+	$dir = opendir( $inner_directory_name );
+	if ( false === $dir ) {
+		return;
+	}
 	$five_minutes = strtotime( '-5 minutes' );
 	while ( false != ( $file = readdir( $dir ) ) ) { // phpcs:ignore WordPress.CodeAnalysis.AssignmentInCondition.FoundInWhileCondition, WordPress.PHP.StrictComparisons.LooseComparison
 		if ( file_exists( $inner_directory_name . '/' . $file ) && is_writable( $inner_directory_name . '/' . $file ) && filemtime( $inner_directory_name . '/' . $file ) < $five_minutes ) {

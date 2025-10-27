@@ -2804,19 +2804,20 @@ function bb_enable_content_counts( $default = false ) {
 /**
  * Get all activity filters option labels.
  *
- * @since BuddyBoss [BBVERSION}
+ * @since BuddyBoss 2.8.20
  *
  * @return array Array of all activity filters option labels.
  */
 function bb_get_activity_filter_options_labels() {
 	$filters = array(
-		'all'       => __( 'All updates', 'buddyboss' ),
-		'just-me'   => __( 'Created by me', 'buddyboss' ),
-		'favorites' => __( "I've reacted to", 'buddyboss' ),
-		'groups'    => __( 'From my groups', 'buddyboss' ),
-		'friends'   => __( 'From my connections', 'buddyboss' ),
-		'mentions'  => __( "I'm mentioned in", 'buddyboss' ),
-		'following' => __( "I'm following", 'buddyboss' ),
+		'all'        => __( 'All updates', 'buddyboss' ),
+		'just-me'    => __( 'Created by me', 'buddyboss' ),
+		'favorites'  => __( "I've reacted to", 'buddyboss' ),
+		'groups'     => __( 'From my groups', 'buddyboss' ),
+		'friends'    => __( 'From my connections', 'buddyboss' ),
+		'mentions'   => __( "I'm mentioned in", 'buddyboss' ),
+		'following'  => __( "I'm following", 'buddyboss' ),
+		'unanswered' => __( 'Unanswered', 'buddyboss' ),
 	);
 
 	// Common function to get only allowed ones.
@@ -2828,7 +2829,7 @@ function bb_get_activity_filter_options_labels() {
 /**
  * Get enabled activity filters options.
  *
- * @since BuddyBoss [BBVERSION}
+ * @since BuddyBoss 2.8.20
  *
  * @param array $args Array of default activity filter options.
  *
@@ -2838,13 +2839,14 @@ function bb_get_enabled_activity_filter_options( $args = array() ) {
 
 	// Set default options if not provided.
 	$default = array(
-		'all'       => 1,
-		'just-me'   => 1,
-		'favorites' => 1,
-		'groups'    => 1,
-		'friends'   => 1,
-		'mentions'  => 1,
-		'following' => 1,
+		'all'        => 1,
+		'just-me'    => 1,
+		'favorites'  => 1,
+		'groups'     => 1,
+		'friends'    => 1,
+		'mentions'   => 1,
+		'following'  => 1,
+		'unanswered' => 1,
 	);
 
 	$args    = array_intersect_key( $args, $default );
@@ -2862,7 +2864,7 @@ function bb_get_enabled_activity_filter_options( $args = array() ) {
 /**
  * Get all activity timeline filters option labels.
  *
- * @since BuddyBoss [BBVERSION}
+ * @since BuddyBoss 2.8.20
  *
  * @return array Array of all activity timeline filters option labels.
  */
@@ -2885,7 +2887,7 @@ function bb_get_activity_timeline_filter_options_labels() {
 /**
  * Get enabled activity timeline filters options.
  *
- * @since BuddyBoss [BBVERSION}
+ * @since BuddyBoss 2.8.20
  *
  * @param array $args Array of default activity timeline filter options.
  *
@@ -2918,7 +2920,7 @@ function bb_get_enabled_activity_timeline_filter_options( $args = array() ) {
 /**
  * Get all activity sorting options labels.
  *
- * @since BuddyBoss [BBVERSION}
+ * @since BuddyBoss 2.8.20
  *
  * @return array Array of all activity sorting options labels.
  */
@@ -2933,7 +2935,7 @@ function bb_get_activity_sorting_options_labels() {
 /**
  * Get enabled activity sorting options.
  *
- * @since BuddyBoss [BBVERSION}
+ * @since BuddyBoss 2.8.20
  *
  * @param array $args Array of default activity sorting options.
  *
