@@ -9393,7 +9393,7 @@ function bb_get_predefined_palette() {
 	/**
 	 * Filters the color palette should have a minimum of 12 color codes and a maximum of 21.
 	 *
-	 * @since BuddyBoss [BBVSERION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param array $palette Array of color palette.
 	 */
@@ -9567,7 +9567,7 @@ function bb_generate_default_avatar( $args ) {
 	/**
 	 * Set font family full path to render text on image.
 	 *
-	 * @since BuddyBoss [BBVSERION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $font_family Full path of font family. It should be a TTF file.
 	 */
@@ -9583,7 +9583,7 @@ function bb_generate_default_avatar( $args ) {
 	/**
 	 * Set font color to render text on image.
 	 *
-	 * @since BuddyBoss [BBVSERION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param string $png_text_color The color of the font to display on image.
 	 */
@@ -9595,7 +9595,7 @@ function bb_generate_default_avatar( $args ) {
 	/**
 	 * Set font size to render text on image.
 	 *
-	 * @since BuddyBoss [BBVSERION]
+	 * @since BuddyBoss 2.16.0
 	 *
 	 * @param int $font_size The font size of the text to display on image.
 	 */
